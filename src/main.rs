@@ -1,30 +1,3 @@
-
-
-// #[derive(Debug)]
-// struct Name {
-//     name: Vec<String>,
-// }
-
-// #[actix_web::main]
-// async fn main() -> Result<(), sqlx::Error> {
-//     let pool = MySqlPool::connect("mysql://root:deadmanalive@localhost:3306/demo").await?;
-
-//     let names = sqlx::query_as::<_, (String,)>("SELECT name FROM users")
-//         .fetch_all(&pool)
-//         .await?;
-//     let mut vec_string: Vec<String> = Vec::new();
-
-//     for row in names {
-//         vec_string.push(row.0.to_string());
-//     }
-//     let name_struct = Name {
-//         name : vec_string,
-//     };
-
-//     println!("{:?}",name_struct);
-
-//     Ok(())
-// }
 use actix_web::{get,web,HttpServer,App};
 use sqlx::{MySqlPool};
 
