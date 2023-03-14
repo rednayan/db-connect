@@ -1,5 +1,6 @@
 use actix_web::{get,web,HttpServer,App};
 use sqlx::{MySqlPool};
+use dotenv::dotenv;
 
 mod task_list;
 use task_list::services;
@@ -12,12 +13,15 @@ struct AppState {
 
 #[get("/")]
 async fn index() -> String {
-    format!("This is it")
+    format!("go to /task_list")
 } 
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()>{
-    let pool = MySqlPool::connect("mysql://root:deadmanalive@localhost:3306/demo").await;
+    dotenv().ok();
+    
+    let database_url: String = std::env::var("DATABASE_URL").unwrap();
+    let pool = MySqlPool::connect(&database_url).await;
     let app_data = web::Data::new(AppState {pool : match pool {
         Ok(val) => val,
         Err(_) => exit(1)
