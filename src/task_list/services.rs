@@ -1,10 +1,10 @@
 use actix_web::{get,post,web,Responder,HttpResponse};
-use serde::{Deserialize,Serialize};
+use serde::{Serialize};
 use super::models::{CreateTaskList};
 use crate::AppState;
 use std::process::exit;
 
-#[derive(Serialize,Deserialize)]
+#[derive(Serialize)]
 struct TaskList {
     id: u32,
     title: String,
@@ -18,17 +18,19 @@ async fn get_task_list(data: web::Data<AppState>) -> impl Responder {
     let task_list = sqlx::query_as::<_,(u32,String,String)>("SELECT id,title,contents FROM task_list")
         .fetch_all(&*pool)
         .await;
-
     let data = match task_list {
-        Ok(data) => println!("data is in here : {:?}",data),
-        Error => println!("error pool",)
+        Ok(data) => data,
+        Err(_) => exit(1)
     };
+    let mut task_pool : Vec<TaskList> = Vec::new();
+    for task in data {  
+        task_pool.push(TaskList {
+            id: task.0,
+            title:task.1,
+            content: task.2
+        });
+    }
 
-    let task_pool = TaskList {
-        id:1,
-        title:"here".to_string(),
-        content:"this is awesome".to_string(),
-    };
     return HttpResponse::Ok().json(task_pool);
 }   
 
