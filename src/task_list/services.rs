@@ -31,7 +31,7 @@ async fn post_task_list(data: web::Data<AppState>,param_obj: web::Json<CreateTas
     let pool = &data.pool;
     let query: String = format!("INSERT INTO task_list (title,contents) VALUES ('{}','{}')",param_obj.title.to_string(),param_obj.contents.to_string());
     sqlx::query(&query).execute(&*pool).await.expect("there is an error");
-    return HttpResponse::Ok().json("Ok");
+    return HttpResponse::Ok().json("task added");
 }
 
 pub fn config(cfg: &mut web::ServiceConfig) {
